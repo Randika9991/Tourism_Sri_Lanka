@@ -1,12 +1,17 @@
 <template>
-    <Head title="Dashboard" />
+    <Head title="District" />
 
     <AdminAuthenticatedLayout>
         <template #header>
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800"
             >
-                fgdfg
+                District
+            </h2>
+            <h2
+                class="text-xl font-semibold leading-tight text-gray-800"
+            >
+                District
             </h2>
         </template>
         <div class="py-12">
@@ -15,7 +20,7 @@
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                       new You're logged in!
+                        District You're
                     </div>
                 </div>
             </div>

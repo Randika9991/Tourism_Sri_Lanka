@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\tourNew;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -17,14 +19,13 @@ Route::get('/', function () {
 
 //admin
 Route::middleware(['auth','role:admin'])->group(function () {
-    Route::get('/admin/dashboard',[tourNew::class,'get'])->name('admin.dashboard');
-
-
+    Route::get('/admin/dashboard',[AdminController::class,'getAdminDashboard'])->name('admin.dashboard');
+    Route::get('/district',[AdminController::class,'getAdminDistrict'])->name('district');
 });
 
 //user
 Route::middleware(['auth','role:user'])->group(function () {
-    Route::get('/user/dashboard',[tourNew::class,'user'])->name('user.dashboard');
+    Route::get('/user/dashboard',[UserController::class,'user'])->name('user.dashboard');
 });
 
 Route::middleware('auth')->group(function () {

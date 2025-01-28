@@ -17,5 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersTableSeeder::class);
         //no need to change any value inside
         $this->call(ProvincesTableSeeder::class);
+        //can change ex:image description ..
+        $this->call(DistrictsTableSeeder::class);
     }
 }

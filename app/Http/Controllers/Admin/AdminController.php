@@ -13,8 +13,4 @@ class AdminController extends Controller
         return Inertia::render('Admin/Dashboard/Dashboard');
     }
 
-    public function getAdminDistrict()
-    {
-        return Inertia::render('Admin/District/Districts');
-    }
 }

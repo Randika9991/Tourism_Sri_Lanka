@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\tourNew;
 use App\Http\Controllers\User\UserController;
@@ -20,7 +21,14 @@ Route::get('/', function () {
 //admin
 Route::middleware(['auth','role:admin'])->group(function () {
     Route::get('/admin/dashboard',[AdminController::class,'getAdminDashboard'])->name('admin.dashboard');
-    Route::get('/district',[AdminController::class,'getAdminDistrict'])->name('district');
+
+    //district
+    Route::get('/district',[DistrictController::class,'getAdminDistrict'])->name('district.index');
+    Route::get('/district/create',[DistrictController::class,'getAdminDistrictCreate'])->name('district.create');
+    Route::post('/district/save',[DistrictController::class,'save'])->name('district.store');
+    Route::get('/district/edit/{id}',[DistrictController::class,'edit'])->name('district.edit');
+    Route::post('/district/edit/{id}',[DistrictController::class,'update'])->name('district.update');
+
 });
 
 //user
@@ -35,6 +43,15 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+
+
+
+
+
+
+
+
 
 
 

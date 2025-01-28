@@ -8,6 +8,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
 </script>
 
 <template>
@@ -45,10 +46,10 @@ const showingNavigationDropdown = ref(false);
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
                                 <NavLink
-                                    :href="route('district')"
-                                    :active="route().current('district')"
+                                    :href="route('district.index')"
+                                    :active="route().current('district.index')"
                                 >
-                                    Dashboard
+                                    District Info
                                 </NavLink>
                             </div>
 
@@ -208,3 +209,18 @@ const showingNavigationDropdown = ref(false);
         </div>
     </div>
 </template>
+<style>
+
+.add-scroll-bar {
+    width: 80%;
+    max-height: 75vh; /* Equivalent to max-h-[75vh] */
+    overflow-y: auto; /* Equivalent to overflow-y-auto */
+}
+
+.conductor-style-bg-colour-2025-add {
+    background-color: #131212;
+    /*background: linear-gradient(to right, rgba(201, 181, 71, 0) 0%, rgba(201, 181, 71, 0.8) 50%, rgba(201, 181, 71, 0) 100%);*/
+    transform: translateY(1%);
+    box-shadow: 0px 1px 1px 0px rgba(201, 181, 71, 0.98);
+}
+</style>

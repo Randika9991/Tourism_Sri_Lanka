@@ -11,7 +11,7 @@ use Inertia\Inertia;
 use function Pest\PendingCalls\pr;
 use function Termwind\render;
 
-class DistrictController extends Controller
+class HotelController extends Controller
 {
     public function save(SaveDistrictRequest $request)
     {
@@ -45,10 +45,10 @@ class DistrictController extends Controller
         }
     }
 
-    public function getAdminDistrict()
+    public function index()
     {
         $districts = District::latest()->paginate(3);
-        return Inertia::render('Admin/District/Index',[
+        return Inertia::render('Admin/Hotel/Index',[
             'districts' => $districts,
         ]);
     }
@@ -80,6 +80,7 @@ class DistrictController extends Controller
             return redirect()->route('district.index')->with('success', $exception->getMessage());
         }
     }
+
 
     public function update(Request $request, $id)
     {

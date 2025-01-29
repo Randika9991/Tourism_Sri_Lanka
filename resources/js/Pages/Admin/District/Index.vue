@@ -29,29 +29,36 @@
                 >
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
                         <template v-if="districts.data.length > 0">
-                            <div v-for="district in districts.data" :key="district.id">
-                                <a :href="route('district.edit',{id: district.id})" class="block bg-white shadow-md rounded-lg overflow-hidden">
+                            <div v-for="district in districts.data" :key="district.id" class="relative group">
+                                <a class="block bg-white shadow-md rounded-lg overflow-hidden relative">
+                                    <!-- Image -->
                                     <img
-                                        style="height: 250px;"
-                                        :src="`/storage/${district.image}`"
-                                    :alt="district.name"
-                                    class="w-full h-5 object-cover"
+                                        :src="district.image ? `/storage/${district.image}` : '/default-image.jpg'"
+                                        :alt="district.name"
+                                        class="w-full h-64 object-cover"
                                     />
-                                    <div class="p-4">
-                                        <h2 class="font-bold text-xl">Name : {{ district.name }}</h2>
 
-                                        <p class="text-gray-600">Popular : {{ district.mostly_popular }}</p>
-
-                                        <p class="text-gray-600">Travel Season : {{ district.travel_season }}</p>
-
+                                    <!-- Overlay with Icon & Message -->
+                                    <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <p class="text-white font-bold text-lg">View Details</p>
                                     </div>
                                 </a>
+                                <div class="p-4">
+                                    <h2 class="font-bold text-xl">Name: {{ district.name }}</h2>
+                                    <p class="text-gray-600">Popular: {{ district.mostly_popular }}</p>
+                                    <p v-if="district.travel_season!==null" class="text-gray-600">Travel Season: {{ district.travel_season }}</p>
+
+                                    <div class="flex space-x-4 mt-2">
+                                        <a :href="route('district.edit', { id: district.id })"  class="text-blue-500 font-bold">Edit</a>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                         <template v-else>
                             <p>No districts available.</p>
                         </template>
                     </div>
+
 
                     <div class="mt-4 gap-4 px-4 flex justify-center">
                         <template v-for="link in districts.links" :key="link.url">

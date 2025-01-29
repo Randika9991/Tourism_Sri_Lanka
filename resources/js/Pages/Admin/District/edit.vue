@@ -7,7 +7,13 @@
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
                     Edit District info
                 </h2>
-                <div class="text-xl font-semibold leading-tight text-gray-800">
+                <div class="flex items-center space-x-4 ml-auto">
+                    <button
+                        @click="DeleteDistrict(districts.id)"
+                        class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg shadow-sm hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
+                    >
+                        Delete
+                    </button>
                     <button
                         @click="goBack"
                         class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
@@ -27,7 +33,7 @@
                 Add District Information
             </h2>
             <form
-                @submit.prevent="saveDistrict(districts.id)"
+                @submit.prevent="editDistrict(districts.id)"
                 method="POST"
                 class="max-w-full h-full"
             >
@@ -80,7 +86,7 @@
                                 >
                                     Please Select District
                                 </option>
-                                <option v-for="district in filteredDistricts" :value="district" :key="district">
+                                <option v-for="district in filteredUpdateDistricts" :value="district" :key="district">
                                     {{ district }}
                                 </option>
                             </select>
@@ -168,7 +174,7 @@
                                 <input
                                     type="file"
                                     name="image"
-                                    @change="handleImageUpload"
+                                    @change="handleUpdateImageUpload"
                                     id="image"
                                     class="block w-full text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                                 />
@@ -230,10 +236,11 @@
 <script setup>
 import { Inertia } from '@inertiajs/inertia';
 import AdminAuthenticatedLayout from '@/Layouts/Admin/AdminAuthenticatedLayout.vue';
-import { Head ,useForm} from '@inertiajs/vue3';
+import {Head, router, useForm} from '@inertiajs/vue3';
 import {computed, ref, watch} from "vue";
 
 const allowMultipleSelection = ref(false);
+const imagePreview = ref(null); // Holds the preview URL
 
 const props = defineProps({
     provinces: {
@@ -247,9 +254,7 @@ const props = defineProps({
     },
 });
 
-console.log(props.getProvincesIdValue)
-
-const filteredDistricts = computed(() => {
+const filteredUpdateDistricts = computed(() => {
     if (!form.province_id) return [];
     const selectedProvince = props.provinces.find(
         (province) => province.id === form.province_id
@@ -274,17 +279,23 @@ watch(
     }
 );
 
-// const handleImageUpload = (event) => {
-//     const file = event.target.files[0];
-//     if (file) {
-//         form.image = file;
-//     }
-// };
+const handleUpdateImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        form.image = file;
 
-const saveDistrict = (id) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreview.value = e.target.result; // Set the preview URL
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+const editDistrict = (id) => {
     form.post(route('district.update',id), {
         onSuccess: () => {
-            alert("district Save Successfully");
+            alert("district Update Successfully");
             console.log("district submitted successfully");
         },
         onError: (errors) => {
@@ -295,25 +306,24 @@ const saveDistrict = (id) => {
         },
     });
 };
-const imagePreview = ref(null); // Holds the preview URL
-
-const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        form.image = file;
-
-        // Create a preview URL
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imagePreview.value = e.target.result; // Set the preview URL
-        };
-        reader.readAsDataURL(file);
-    }
-};
-
 
 const goBack = () => {
     Inertia.visit(route('district.index'));
 };
+
+const DeleteDistrict = (id) => {
+    if (confirm('Are you sure you want to delete this district?')) {
+        router.delete(route('district.delete', id), {
+            onSuccess: () => {
+                alert("District deleted successfully");
+            },
+            onError: (error) => {
+                console.error('Error deleting district:', error);
+                alert("Failed to delete district!");
+            }
+        });
+    }
+};
+
 </script>
 

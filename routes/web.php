@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DistrictController;
+use App\Http\Controllers\Admin\HotelController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\tourNew;
 use App\Http\Controllers\User\UserController;
@@ -28,6 +29,10 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::post('/district/save',[DistrictController::class,'save'])->name('district.store');
     Route::get('/district/edit/{id}',[DistrictController::class,'edit'])->name('district.edit');
     Route::post('/district/edit/{id}',[DistrictController::class,'update'])->name('district.update');
+    Route::delete('/district/{id}/edit',[DistrictController::class,'delete'])->name('district.delete');
+
+    //Hotel
+    Route::get('/hotel',[HotelController::class,'index'])->name('hotel.index');
 
 });
 

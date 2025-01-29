@@ -32,9 +32,6 @@
                 class="max-w-full h-full"
             >
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 w-full h-full text-white table-container">
-
-
-
                     <div>
                         <label
                             for="province_id"
@@ -86,6 +83,9 @@
                             </select>
                             <option v-else>Please select a province first.</option>
                         </div>
+                        <p class="text-red-500 text-xs font-thin" v-if="form.errors.name">
+                            {{ form.errors.name }}
+                        </p>
                     </div>
 
                     <!-- About -->
@@ -111,7 +111,7 @@
                             <label for="resource" class="block text-sm font-medium leading-6">Mostly Popular</label>
                             <input
                                 type="text"
-                                v-model="form.MostlyPopular"
+                                v-model="form.mostly_popular"
                                 class="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
                                 placeholder="Enter custom resource"
                                 required
@@ -121,7 +121,7 @@
                         <div class="col-span-2">
                             <label for="resource" class="block text-sm font-medium leading-6 invisible">Dropdown</label>
                             <select
-                                v-model="form.MostlyPopular"
+                                v-model="form.mostly_popular"
                                 :multiple="allowMultipleSelection"
                                 class="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
                             >
@@ -135,6 +135,7 @@
                                 <option>Romantic</option>
                             </select>
                         </div>
+
                     </div>
 
                     <!-- Location -->
@@ -168,8 +169,12 @@
                                 @change="handleImageUpload"
                                 id="image"
                                 class="block w-full text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                required
                             />
                         </div>
+                        <p class="text-red-500 text-xs font-thin" v-if="form.errors.image">
+                            {{ form.errors.image }}
+                        </p>
                     </div>
 
                     <!-- Travel Season -->
@@ -183,7 +188,7 @@
                                 type="text"
                                 name="travel_season"
                                 id="travel_season"
-                                v-model="form.travelSeason"
+                                v-model="form.travel_season"
                                 autocomplete="travel_season"
                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
@@ -233,13 +238,13 @@ const form = useForm({
     name: '',
     about: '',
     location: '',
-    MostlyPopular: [],
-    travelSeason:'',
+    mostly_popular: [],
+    travel_season:'',
     image: null,
 });
 
 watch(
-    () => form.MostlyPopular,
+    () => form.mostly_popular,
     (newValue) => {
         allowMultipleSelection.value = newValue.includes("Arts") || newValue.includes("Family friendly")|| newValue.includes("Culture");
     }
@@ -262,15 +267,17 @@ const saveDistrict = () => {
         onError: (errors) => {
             console.log("district Save errors:", errors);
             if (errors.name) {
-                form.errors.name = "The district has already been taken.";
+                form.errors.name = "The district has already been added.";
+            }
+            if (errors.location) {
+                form.errors.location = "The location is required.";
+            }
+            if (errors.image) {
+                form.errors.image = errors.image;
             }
         },
     });
 };
-
-// watch(() => form.province_id, () => {
-//     form.district_id = '';
-// });
 
 const goBack = () => {
     Inertia.visit(route('district.index'));

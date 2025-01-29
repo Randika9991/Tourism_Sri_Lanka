@@ -14,7 +14,7 @@ class DistrictsTableSeeder extends Seeder
     {
         DB::table('districts')->insert([
             [
-                'province_id' => 1, // Example province ID
+                'province_id' => 1,
                 'name' => 'Colombo',
                 'about' => 'The commercial capital of Sri Lanka.',
                 'mostly_popular' => 'Arts & culture, Family friendly',
@@ -25,7 +25,7 @@ class DistrictsTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'province_id' => 1, // Example province ID
+                'province_id' => 1,
                 'name' => 'Gampaha',
                 'about' => 'Known for its serene countryside.',
                 'mostly_popular' => 'Wildlife & nature, Adventure, Romantic',
@@ -35,8 +35,28 @@ class DistrictsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-
-            //more 23
+            [
+                'province_id' => 2,
+                'name' => 'Kandy',
+                'about' => 'A city rich in history, home to the Temple of the Tooth Relic.',
+                'mostly_popular' => 'Cultural heritage, Scenic beauty, Pilgrimage',
+                'location' => '7.2906° N, 80.6337° E',
+                'image' => 'uploads/images/kandy.jpg',
+                'travel_season' => 'December to March',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'province_id' => 2,
+                'name' => 'Matale',
+                'about' => 'Famous for its spice gardens and historical sites.',
+                'mostly_popular' => 'Wildlife & nature, Adventure, Hiking',
+                'location' => '7.4675° N, 80.6234° E',
+                'image' => 'uploads/images/matale.jpg',
+                'travel_season' => 'November to February',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

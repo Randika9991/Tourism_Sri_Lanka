@@ -33,6 +33,10 @@ Route::middleware(['auth','role:admin'])->group(function () {
 
     //Hotel
     Route::get('/hotel',[HotelController::class,'index'])->name('hotel.index');
+    Route::get('/hotel/create',[HotelController::class,'create'])->name('hotel.create');
+    Route::post('/hotel/store',[HotelController::class,'store'])->name('hotel.store');
+
+
 
 });
 
@@ -48,26 +52,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //Route::get('/dashboard', function () {

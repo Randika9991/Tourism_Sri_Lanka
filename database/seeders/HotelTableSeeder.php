@@ -15,10 +15,11 @@ class HotelTableSeeder extends Seeder
     {
         DB::table('hotels')->insert([
             [
-                'province_id' => 1,
                 'district_id' => 1,
+                'province_name' => 'Western Province',
                 'name' => 'Grand Ocean Hotel',
                 'description' => 'A luxurious 5-star hotel with an ocean view, featuring a rooftop infinity pool, spa, and gourmet dining.',
+                'category' => 'beach',
                 'location' => 'Colombo, Sri Lanka',
                 'latitude' => 6.9271,
                 'longitude' => 79.8612,

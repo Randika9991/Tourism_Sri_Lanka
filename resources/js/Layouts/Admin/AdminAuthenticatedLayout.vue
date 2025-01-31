@@ -228,8 +228,15 @@ const showingNavigationDropdown = ref(false);
     overflow-y: auto; /* Equivalent to overflow-y-auto */
 }
 
-.conductor-style-bg-colour-2025-add {
-    background-color: #131212;
+.District-style-2025-new {
+    background-color: #084d5e;
+    /*background: linear-gradient(to right, rgba(201, 181, 71, 0) 0%, rgba(201, 181, 71, 0.8) 50%, rgba(201, 181, 71, 0) 100%);*/
+    transform: translateY(1%);
+    box-shadow: 0px 1px 1px 0px rgba(201, 181, 71, 0.98);
+}
+
+.Hotel-style-2025-new {
+    background-color: #084d5e;
     /*background: linear-gradient(to right, rgba(201, 181, 71, 0) 0%, rgba(201, 181, 71, 0.8) 50%, rgba(201, 181, 71, 0) 100%);*/
     transform: translateY(1%);
     box-shadow: 0px 1px 1px 0px rgba(201, 181, 71, 0.98);

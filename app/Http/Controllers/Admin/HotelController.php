@@ -5,128 +5,91 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SaveDistrictRequest;
 use App\Models\District;
+use App\Models\Hotel;
 use App\Models\province;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use function Pest\PendingCalls\pr;
 use function Termwind\render;
+use Illuminate\Support\Facades\Log; // Import Log facade
+
 
 class HotelController extends Controller
 {
-    public function save(SaveDistrictRequest $request)
-    {
-        try {
-//            dd($request->all());
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '_' . $image->getClientOriginalName(); // Unique name for the file
-                $imagePath = $image->storeAs('uploads/images', $imageName, 'public'); // Save in the 'public/uploads/images' directory
-            }
-
-            $mostlyPopular = $request->has('mostly_popular') && is_array($request->input('mostly_popular'))
-                ? implode(',', $request->input('mostly_popular'))
-                :  $request->input('mostly_popular');
-
-            $save = District::create([
-                'province_id' => $request->input('province_id'),
-                'name' => $request->input('name'),
-                'about' => $request->input('about'),
-                'location' => $request->input('location'),
-                'mostly_popular' => $mostlyPopular,
-                'travel_season' => $request->input('travel_season'),
-                'image' => $imagePath,
-            ]);
-            if ($save) {
-                return redirect()->route('district.index')->with('success', 'District saved successfully!');
-            }
-        } catch (\Exception $exception) {
-            dd($exception);
-        }
-    }
 
     public function index()
     {
-        $districts = District::latest()->paginate(3);
-        return Inertia::render('Admin/Hotel/Index',[
-            'districts' => $districts,
-        ]);
+        return Inertia::render('Admin/Hotel/Index');
     }
 
-    public function getAdminDistrictCreate()
+    public function create()
     {
         try {
-            $provinces = Province::all();
-            return Inertia::render('Admin/District/create',[
-                'provinces' => $provinces,
-            ]);
-        } catch (\Exception $exception) {
-            dd($exception);
-        }
-    }
-
-    public function edit($id)
-    {
-        try {
-            $provinces = Province::all();
-            $districts = District::findOrFail($id);
-            $getProvincesIdValue = Province::findOrFail($districts->province_id);
-            return Inertia::render('Admin/District/edit', [
-                'provinces' => $provinces,
+//            $hotel =  Hotel::all();
+//            dd($hotel);
+            $districts = District::with('province')->get();
+//            dd($districts->all());
+            return Inertia::render('Admin/Hotel/Create',[
                 'districts' => $districts,
-                'getProvincesIdValue'=>$getProvincesIdValue
             ]);
         } catch (\Exception $exception) {
-            return redirect()->route('district.index')->with('success', $exception->getMessage());
+            return Inertia::render('Admin/Hotel/Index');
         }
     }
 
-
-    public function update(Request $request, $id)
+    public function store(Request $request)
     {
-//        dd($request->all());
         try {
-            $district = District::findOrFail($id);
-
-            $imagePath = $district->image;
-
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '_' . $image->getClientOriginalName(); // Unique name for the file
-                $imagePath = $image->storeAs('uploads/images', $imageName, 'public'); // Save in the 'public/uploads/images' directory
-            }
-
-            $mostlyPopular = $request->has('MostlyPopular') && is_array($request->input('MostlyPopular'))
-                ? implode(',', $request->input('MostlyPopular'))
-                :  $request->input('MostlyPopular');
-
-            $update = $district->update([
-                'province_id' => $request->input('province_id'),
-                'name' => $request->input('name'),
-                'about' => $request->input('about'),
-                'location' => $request->input('location'),
-                'mostly_popular' => $mostlyPopular,
-                'travel_season' => $request->input('travelSeason'),
-                'image' => $imagePath,
+            // Validate request
+            $validatedData = $request->validate([
+                'name' => 'required|string',
+                'description' => 'nullable|string',
+                'location' => 'required|string',
+                'province_name' => 'required|string',
+                'category' => 'required|string',
+                'district_id' => 'required|integer',
+                'latitude' => 'nullable|string',
+                'longitude' => 'nullable|string',
+                'rating' => 'nullable|numeric',
+                'price_per_night' => 'nullable|numeric',
+                'amenities' => 'nullable|string',
+                'room_types' => 'nullable|array',
+                'check_in_time' => 'nullable|string',
+                'check_out_time' => 'nullable|string',
+                'contact_number' => 'nullable|string',
+                'email' => 'nullable|email',
+                'website' => 'nullable|string',
+                'images' => 'nullable|array', // Ensure images is an array
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate each image
             ]);
-            if ($update) {
-                return redirect()->route('district.index')->with('success', 'District saved successfully!');
+
+            // Handle image uploads
+            $imagePaths = [];
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $imageName = time() . '_' . $image->getClientOriginalName();
+                    $path = $image->storeAs('uploads/hotels', $imageName, 'public'); // Store in public disk
+                    $imagePaths[] = $path; // Store accessible URL
+                }
             }
-        } catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
-    }
 
-    public function delete($id)
-    {
-//        dd($id);
-        try {
-            $district = District::findOrFail($id);
-            $district->delete();
+            // Convert arrays to JSON for storage
+            $validatedData['room_types'] = json_encode($validatedData['room_types']);
+            $validatedData['images'] = json_encode($imagePaths);
 
-            return redirect()->route('district.index')->with('success', 'District saved successfully!');
+            // Save to DB
+            $hotel = Hotel::create($validatedData);
+
+            return Inertia::render('Admin/Hotel/Index');
+
         } catch (\Exception $exception) {
-            return redirect()->route('district.index')->with('success', 'District saved successfully!');
+            Log::error('Error in storing hotel', [
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine()
+            ]);
+
+            return Inertia::render('Admin/Hotel/Index');
         }
     }
 }

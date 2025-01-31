@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('hotels', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('province_id');
             $table->unsignedBigInteger('district_id');
+            $table->string('province_name');
             $table->string('name');
             $table->text('description')->nullable();
+            $table->string('category');
             $table->string('location')->nullable();
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
@@ -33,7 +34,6 @@ return new class extends Migration
             $table->timestamps();
 
             // Foreign Key Constraints
-            $table->foreign('province_id')->references('id')->on('provinces')->onDelete('cascade');
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
         });
     }

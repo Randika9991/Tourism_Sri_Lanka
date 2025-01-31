@@ -19,6 +19,12 @@ class District extends Model
         'image',
         'travel_season',
     ];
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
+
 }
 
 

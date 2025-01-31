@@ -19,7 +19,7 @@
         </template>
 
         <div
-            class="max-w-full lg:max-w-6xl mx-auto sm:mt-0 px-4 sm:px-8 lg:px-20 add-scroll-bar conductor-style-bg-colour-2025-add"
+            class="max-w-full lg:max-w-6xl mx-auto sm:mt-0 px-4 sm:px-8 lg:px-20 add-scroll-bar District-style-2025-new"
         >
             <h2
                 class="flex justify-center text-2xl sm:text-3xl font-semibold leading-7 text-white mt-2 mb-6 font-serif"
@@ -212,6 +212,7 @@
 </template>
 
 <script setup>
+
 import { Inertia } from '@inertiajs/inertia';
 import AdminAuthenticatedLayout from '@/Layouts/Admin/AdminAuthenticatedLayout.vue';
 import { Head ,useForm} from '@inertiajs/vue3';

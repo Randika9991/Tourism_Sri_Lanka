@@ -35,6 +35,7 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::get('/hotel',[HotelController::class,'index'])->name('hotel.index');
     Route::get('/hotel/create',[HotelController::class,'create'])->name('hotel.create');
     Route::post('/hotel/store',[HotelController::class,'store'])->name('hotel.store');
+    Route::get('/hotel/edit/{id}',[HotelController::class,'edit'])->name('hotel.edit');
 
 
 

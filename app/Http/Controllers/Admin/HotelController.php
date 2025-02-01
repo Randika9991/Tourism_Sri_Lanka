@@ -20,9 +20,10 @@ class HotelController extends Controller
 
     public function index()
     {
-        $hotel =  Hotel::all();
+        $hotels =  Hotel::with('district')->latest()->paginate(3);
+//        dd($hotels);
         return Inertia::render('Admin/Hotel/Index',[
-            'hotel' => $hotel,
+            'hotels' => $hotels,
         ]);
     }
 
@@ -78,5 +79,12 @@ class HotelController extends Controller
 
             return back()->with('error', 'Something went wrong!');
         }
+    }
+
+    public function edit()
+    {
+        return Inertia::render('Admin/Hotel/Index',[
+            'hotels' => $hotels,
+        ]);
     }
 }

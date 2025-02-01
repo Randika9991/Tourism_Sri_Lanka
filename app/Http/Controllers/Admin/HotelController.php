@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SaveDistrictRequest;
+use App\Http\Requests\StoreHotelRequest;
 use App\Models\District;
 use App\Models\Hotel;
 use App\Models\province;
@@ -19,7 +20,10 @@ class HotelController extends Controller
 
     public function index()
     {
-        return Inertia::render('Admin/Hotel/Index');
+        $hotel =  Hotel::all();
+        return Inertia::render('Admin/Hotel/Index',[
+            'hotel' => $hotel,
+        ]);
     }
 
     public function create()
@@ -37,59 +41,42 @@ class HotelController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(StoreHotelRequest $request)
     {
         try {
-            // Validate request
-            $validatedData = $request->validate([
-                'name' => 'required|string',
-                'description' => 'nullable|string',
-                'location' => 'required|string',
-                'province_name' => 'required|string',
-                'category' => 'required|string',
-                'district_id' => 'required|integer',
-                'latitude' => 'nullable|string',
-                'longitude' => 'nullable|string',
-                'rating' => 'nullable|numeric',
-                'price_per_night' => 'nullable|numeric',
-                'amenities' => 'nullable|string',
-                'room_types' => 'nullable|array',
-                'check_in_time' => 'nullable|string',
-                'check_out_time' => 'nullable|string',
-                'contact_number' => 'nullable|string',
-                'email' => 'nullable|email',
-                'website' => 'nullable|string',
-                'images' => 'nullable|array', // Ensure images is an array
-                'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate each image
-            ]);
+            $validatedData = $request->validated();
 
-            // Handle image uploads
+            $validatedData['amenities'] = $request->has('amenities') && is_array($request->input('amenities'))
+                ? implode(',', $request->input('amenities'))
+                : $request->input('amenities');
+
             $imagePaths = [];
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     $imageName = time() . '_' . $image->getClientOriginalName();
-                    $path = $image->storeAs('uploads/hotels', $imageName, 'public'); // Store in public disk
-                    $imagePaths[] = $path; // Store accessible URL
+                    $path = $image->storeAs('uploads/hotels', $imageName, 'public');
+                    $imagePaths[] = $path;
                 }
             }
 
-            // Convert arrays to JSON for storage
-            $validatedData['room_types'] = json_encode($validatedData['room_types']);
+            $validatedData['room_types'] = $request->has('room_types') && is_array($request->input('room_types'))
+                ? implode(',', $request->input('room_types'))
+                : $request->input('room_types');
+
             $validatedData['images'] = json_encode($imagePaths);
 
-            // Save to DB
             $hotel = Hotel::create($validatedData);
 
-            return Inertia::render('Admin/Hotel/Index');
-
+            Log::info('Hotel created successfully', ['hotel_id' => $hotel->id]);
         } catch (\Exception $exception) {
+//            dd($exception);
             Log::error('Error in storing hotel', [
                 'message' => $exception->getMessage(),
                 'file' => $exception->getFile(),
                 'line' => $exception->getLine()
             ]);
 
-            return Inertia::render('Admin/Hotel/Index');
+            return back()->with('error', 'Something went wrong!');
         }
     }
 }

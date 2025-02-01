@@ -24,8 +24,8 @@ return new class extends Migration
             $table->json('images')->nullable();
             $table->decimal('rating', 3, 1)->nullable(); // Allows ratings like 4.5
             $table->decimal('price_per_night', 10, 2);
-            $table->text('amenities');
-            $table->json('room_types');
+            $table->string('amenities');
+            $table->string('room_types');
             $table->time('check_in_time')->default('14:00:00');
             $table->time('check_out_time')->default('11:00:00');
             $table->string('contact_number');

@@ -38,6 +38,8 @@ import AdminAuthenticatedLayout from '@/Layouts/Admin/AdminAuthenticatedLayout.v
 import { Head } from '@inertiajs/vue3';
 import {Inertia} from "@inertiajs/inertia";
 
+
+
 const addNewHotel = () => {
     Inertia.visit(route('hotel.create'));
 };

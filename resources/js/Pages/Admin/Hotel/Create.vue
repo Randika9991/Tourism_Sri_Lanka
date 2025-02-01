@@ -84,7 +84,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <input type="file" id="imageUpload1" accept="image/*" @change="handleImageChange(0,$event)" />
+                            <input type="file" id="imageUpload1" accept="image/*"  @change="handleImageChange(0,$event)" />
                         </div>
                         <div>
                             <div v-if="form.images[0]">
@@ -149,10 +149,16 @@
                         <div>
                             <label class="block text-sm font-medium text-white">Latitude</label>
                             <input v-model="form.latitude" type="text" class="w-full p-2 border rounded-lg text-black" />
+                            <p class="text-red-500 text-xs font-thin" v-if="form.errors.latitude">
+                                {{ form.errors.latitude }}
+                            </p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-white">Longitude</label>
                             <input v-model="form.longitude" type="text" class="w-full p-2 border rounded-lg text-black" />
+                            <p class="text-red-500 text-xs font-thin" v-if="form.errors.longitude">
+                                {{ form.errors.longitude }}
+                            </p>
                         </div>
                     </div>
 
@@ -169,6 +175,9 @@
                                 <label class="block text-sm font-medium text-white">Email</label>
                                 <input v-model="form.email" type="email" required class="w-full p-2 border rounded-lg text-black" />
                             </div>
+                            <p class="text-red-500 text-xs font-thin" v-if="form.errors.email">
+                                {{ form.errors.email }}
+                            </p>
                         </div>
                     </div>
                     <!-- Contact Information -->
@@ -183,11 +192,36 @@
                     <h3 class="text-xl text-white mb-4">Amenities & Additional Details</h3>
 
                     <!-- Amenities -->
-                    <div>
-                        <label class="block text-sm font-medium text-white">Amenities</label>
-                        <textarea v-model="form.amenities" class="w-full p-2 border rounded-lg text-black"></textarea>
-                    </div>
 
+                    <div class="grid grid-cols-4 ">
+                        <div class="col-span-2">
+                            <label for="resource" class="block text-sm font-medium leading-6">Amenities</label>
+                            <input
+                                type="text"
+                                v-model="form.amenities"
+                                class="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                placeholder="Enter or select resource"
+                                required
+                            />
+                        </div>
+                        <div class="col-span-2">
+                            <label for="resource" class="block text-sm font-medium leading-6 invisible">Amenities</label>
+                            <select
+                                v-model="form.amenities"
+                                :multiple="allowMultipleSelectionAmenities"
+                                class="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                            >
+                                <option disabled value="">Please select one or more</option>
+                                <option>WiFi</option>
+                                <option>Pool</option>
+                                <option>Spa</option>
+                                <option>Parking</option>
+                                <option>Gym</option>
+                                <option>Restaurant</option>
+                                <option>Bar</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="grid grid-cols-4 ">
                         <div class="col-span-2">
                             <label for="resource" class="block text-sm font-medium leading-6">Room Types</label>
@@ -195,7 +229,7 @@
                                 type="text"
                                 v-model="form.room_types"
                                 class="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                                placeholder="Enter custom resource"
+                                placeholder="Enter or select resource"
                                 required
                             />
                         </div>
@@ -258,6 +292,8 @@ import { Inertia } from "@inertiajs/inertia";
 import {computed, ref, watch} from "vue";
 
 const allowMultipleSelectionHotel = ref(true);
+const allowMultipleSelectionAmenities = ref(true);
+
 
 const props = defineProps({
     districts: {
@@ -326,8 +362,14 @@ const saveHotel = () => {
         },
         onError: (errors) => {
             console.log("district Save errors:", errors);
-            if (errors.name) {
-                form.errors.name = "The district has already been added.";
+            if (errors.email) {
+                form.errors.name = errors.email;
+            }
+            if (errors.latitude) {
+                form.errors.latitude = errors.latitude;
+            }
+            if (errors.longitude) {
+                form.errors.longitude = errors.longitude;
             }
             if (errors.location) {
                 form.errors.location = "The location is required.";

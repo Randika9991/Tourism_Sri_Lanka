@@ -1,19 +1,34 @@
 <template>
     <Head title="Dashboard" />
-
     <AdminAuthenticatedLayout>
+        <template #header>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <!-- District Header -->
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                    Hotel Information
+                </h2>
+
+                <!-- Add New District Section -->
+                <div class="text-xl font-semibold leading-tight text-gray-800">
+                    <button
+                        class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
+                        @click="addNewHotel"
+                    >
+                        Add New Hotel
+                    </button>
+                </div>
+            </div>
+        </template>
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
-                >
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
+                        <!-- Hotel List -->
                         <template v-if="hotels.data.length > 0">
                             <div v-for="hotel in hotels.data" :key="hotel.id" class="relative group">
                                 <a class="block bg-white shadow-md rounded-lg overflow-hidden relative">
                                     <!-- Image -->
                                     <img
-
                                         :src="hotel.images ? `/storage/${JSON.parse(hotel.images)[0]}` : '/default-image.jpg'"
                                         :alt="hotel.name"
                                         class="w-full h-64 object-cover"
@@ -30,28 +45,19 @@
                                         Rating:
                                         <span v-for="n in Math.floor(hotel.rating)" :key="n" class="text-yellow-500">★</span>
                                     </p>
-                                    <p v-if="hotel.travel_season!==null" class="text-gray-600">Sri Lanka {{hotel.province_name}} {{ hotel.district.name }}.</p>
+                                    <p v-if="hotel.travel_season!==null" class="text-gray-600">Sri Lanka {{ hotel.province_name }} {{ hotel.district.name }}.</p>
                                     <p class="text-gray-600">Travel Season: {{ hotel.district.travel_season }}</p>
                                     <div class="flex space-x-4 mt-2">
-                                        <a :href="route('hotel.edit', { id: hotel.id })"  class="text-blue-500 font-bold">Edit</a>
+                                        <a :href="route('hotel.edit', { id: hotel.id })" class="text-blue-500 font-bold">Edit</a>
                                     </div>
                                 </div>
                             </div>
                         </template>
+
+                        <!-- No Hotels Available -->
                         <template v-else>
-                            <p>No districts available.</p>
+                            <p>No hotels available.</p>
                         </template>
-                        <div class="py-12">
-                            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                                <div
-                                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
-                                >
-                                    <div class="p-6 text-gray-900">
-                                        Admin You're logged in!
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -62,7 +68,7 @@
 <script setup>
 import AdminAuthenticatedLayout from '@/Layouts/Admin/AdminAuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import {Inertia} from "@inertiajs/inertia";
+import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps({
     hotels: {
@@ -70,10 +76,7 @@ const props = defineProps({
     },
 });
 
-console.log(props.hotels);
-
 const addNewHotel = () => {
     Inertia.visit(route('hotel.create'));
 };
 </script>
-

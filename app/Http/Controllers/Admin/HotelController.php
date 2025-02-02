@@ -20,11 +20,15 @@ class HotelController extends Controller
 
     public function index()
     {
-        $hotels =  Hotel::with('district')->latest()->paginate(3);
+        try {
+            $hotels =  Hotel::with('district')->latest()->paginate(3);
 //        dd($hotels);
-        return Inertia::render('Admin/Hotel/Index',[
-            'hotels' => $hotels,
-        ]);
+            return Inertia::render('Admin/Hotel/Index',[
+                'hotels' => $hotels,
+            ]);
+        } catch (\Exception $exception) {
+            Log::info('Hotel created successfully', [$exception]);
+        }
     }
 
     public function create()
@@ -38,6 +42,7 @@ class HotelController extends Controller
                 'districts' => $districts,
             ]);
         } catch (\Exception $exception) {
+            Log::info('Hotel created successfully', [$exception]);
             return Inertia::render('Admin/Hotel/Index');
         }
     }
@@ -83,8 +88,7 @@ class HotelController extends Controller
 
     public function edit()
     {
-        return Inertia::render('Admin/Hotel/Index',[
-            'hotels' => $hotels,
-        ]);
+
+        return Inertia::render('Admin/Hotel/edit');
     }
 }

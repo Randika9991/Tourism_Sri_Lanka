@@ -84,7 +84,8 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <input type="file" id="imageUpload1" accept="image/*"  @change="handleImageChange(0,$event)" />
+                            <label class="block text-sm font-medium text-white">add main thumb image</label>
+                            <input type="file" id="imageUpload1" accept="image/*" required  @change="handleImageChange(0,$event)" />
                         </div>
                         <div>
                             <div v-if="form.images[0]">
@@ -95,6 +96,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
+                            <label class="block text-sm font-medium text-white">image 1</label>
                             <input type="file" id="imageUpload2" accept="image/*" @change="handleImageChange(1,$event)" />
                         </div>
                         <div>
@@ -106,6 +108,8 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
+                            <label class="block text-sm font-medium text-white">image 2</label>
+
                             <input type="file" id="imageUpload3" accept="image/*" @change="handleImageChange(2,$event)" />
                         </div>
                         <div>
@@ -357,8 +361,8 @@ const goBack = () => {
 const saveHotel = () => {
     form.post(route('hotel.store'), {
         onSuccess: () => {
-            alert("district Save Successfully");
-            console.log("district submitted successfully");
+            alert("Hotel Save Successfully");
+            console.log("Hotel submitted successfully");
         },
         onError: (errors) => {
             console.log("district Save errors:", errors);

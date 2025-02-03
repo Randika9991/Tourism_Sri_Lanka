@@ -29,7 +29,7 @@
                                 <a class="block bg-white shadow-md rounded-lg overflow-hidden relative">
                                     <!-- Image -->
                                     <img
-                                        :src="hotel.images ? `/storage/${JSON.parse(hotel.images)[0]}` : '/default-image.jpg'"
+                                        :src="hotel.images ? `/storage/${JSON.parse(hotel.images)[1]}` : '/default-image.jpg'"
                                         :alt="hotel.name"
                                         class="w-full h-64 object-cover"
                                     />

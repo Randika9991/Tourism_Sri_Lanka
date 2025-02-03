@@ -102,9 +102,12 @@
                                     alt="Uploaded Image"
                                     style="height: 80px; width: 150px; border-radius: 30px"
                                 />
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" >
+                                    <label class="block text-sm font-medium text-white">image 1</label>
+                                </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -411,7 +414,7 @@ const editHotel = (id) => {
 };
 
 const goBack = () => {
-    Inertia.visit(route('district.index'));
+    Inertia.visit(route('hotel.index'));
 };
 
 // const DeleteDistrict = (id) => {

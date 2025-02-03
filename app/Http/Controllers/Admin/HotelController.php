@@ -48,7 +48,6 @@ class HotelController extends Controller
     public function store(StoreHotelRequest $request)
     {
         try {
-
             $validatedData = $request->validated();
 
             $validatedData['amenities'] = $request->has('amenities') && is_array($request->input('amenities'))
@@ -96,17 +95,60 @@ class HotelController extends Controller
                 'districts' => $districts,
             ]);
         } catch (\Exception $exception) {
-            dd($exception);
+            Log::error('Error updating hotel', [
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine()
+            ]);
+            return back()->with('error', 'Something went wrong!');
         }
     }
 
     public function update(UpdateHotelRequest $request, $id)
     {
-//        dd($request->all());
         try {
-            dd($request->all(),$id);
+            $hotel = Hotel::findOrFail($id);
+            $validatedData = $request->validated();
+
+            $validatedData['amenities'] = $request->has('amenities') && is_array($request->input('amenities'))
+                ? implode(',', $request->input('amenities'))
+                : $request->input('amenities');
+
+            $validatedData['room_types'] = $request->has('room_types') && is_array($request->input('room_types'))
+                ? implode(',', $request->input('room_types'))
+                : $request->input('room_types');
+
+            $imagePaths = json_decode($hotel->images, true);  // Get the existing images array
+
+            if ($request->hasFile('images')) {
+                $uploadedImages = $request->file('images');
+
+                foreach ($uploadedImages as $index => $image) {
+                    $imageName = time() . '_' . $image->getClientOriginalName();
+                    $path = $image->storeAs('uploads/hotels', $imageName, 'public');
+                    if (isset($imagePaths[$index])) {
+                        $imagePaths[$index] = $path;
+                    } else {
+                        $imagePaths[] = $path;
+                    }
+                }
+            }
+
+            $validatedData['images'] = json_encode($imagePaths);
+
+            $hotel->update($validatedData);
+
+            Log::info('Hotel updated successfully', ['hotel_id' => $hotel->id]);
+
+            return redirect()->route('hotel.index')->with('success', 'Hotel updated successfully');
+
         } catch (\Exception $exception) {
-            dd($exception->getMessage());
+            Log::error('Error updating hotel', [
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine()
+            ]);
+            return back()->with('error', 'Something went wrong!');
         }
     }
 }

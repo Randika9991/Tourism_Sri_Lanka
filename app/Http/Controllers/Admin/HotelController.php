@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SaveDistrictRequest;
 use App\Http\Requests\StoreHotelRequest;
+use App\Http\Requests\UpdateHotelRequest;
 use App\Models\District;
 use App\Models\Hotel;
 use App\Models\province;
@@ -34,10 +35,7 @@ class HotelController extends Controller
     public function create()
     {
         try {
-//            $hotel =  Hotel::all();
-//            dd($hotel);
             $districts = District::with('province')->get();
-//            dd($districts->all());
             return Inertia::render('Admin/Hotel/Create',[
                 'districts' => $districts,
             ]);
@@ -50,6 +48,7 @@ class HotelController extends Controller
     public function store(StoreHotelRequest $request)
     {
         try {
+
             $validatedData = $request->validated();
 
             $validatedData['amenities'] = $request->has('amenities') && is_array($request->input('amenities'))
@@ -86,9 +85,28 @@ class HotelController extends Controller
         }
     }
 
-    public function edit()
+    public function edit($id)
     {
+        try {
+            $hotel = Hotel::with('district')->findOrFail($id);
+            $districts = District::with('province')->get();
+            $hotel->images = json_decode($hotel->images, true);
+            return Inertia::render('Admin/Hotel/edit',[
+                'hotel' => $hotel,
+                'districts' => $districts,
+            ]);
+        } catch (\Exception $exception) {
+            dd($exception);
+        }
+    }
 
-        return Inertia::render('Admin/Hotel/edit');
+    public function update(UpdateHotelRequest $request, $id)
+    {
+//        dd($request->all());
+        try {
+            dd($request->all(),$id);
+        } catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
     }
 }

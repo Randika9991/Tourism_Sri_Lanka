@@ -37,8 +37,7 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::post('/hotel/store',[HotelController::class,'store'])->name('hotel.store');
     Route::get('/hotel/edit/{id}',[HotelController::class,'edit'])->name('hotel.edit');
 
-
-
+    Route::post('/hotel/edit/{id}',[HotelController::class,'update'])->name('hotel.update');
 });
 
 //user
